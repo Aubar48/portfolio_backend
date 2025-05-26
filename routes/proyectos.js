@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const Proyecto = require('../models/Proyecto');
+const Proyecto = require('../models/Proyecto.js');
 
 // Configuración de multer para subir imágenes
 const storage = multer.diskStorage({
