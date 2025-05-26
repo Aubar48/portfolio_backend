@@ -12,8 +12,8 @@ const proyectosRoutes = require('./app/routes/proyectos.js');
 const presentacionesRoutes = require('./app/routes/presentaciones.js');
 
 const app = express();
-const PORT = process.env.DB_PORT || 41104;
-const HOST = process.env.DB_HOST; // importante para Railway
+const DB_PORT = process.env.DB_PORT || 41104;
+const DB_HOST = process.env.DB_HOST; // importante para Railway
 
 app.use(cors());
 app.use(express.json());
