@@ -1,36 +1,29 @@
-const dotenv =require('dotenv')
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database');
 
-const usuarioRoutes = require('./routes/usuario');
-const educacionRoutes = require('./routes/educacion');
-const experienciaRoutes = require('./routes/experiencia');
-const usuariosRoutes = require('./routes/usuario');
-const proyectosRoutes = require('./routes/proyectos');
-const presentacionesRoutes = require('./routes/presentaciones');
-
-dotenv.config()
+const usuarioRoutes = require('./routes/usuario.js');
+const educacionRoutes = require('./routes/educacion.js');
+const experienciaRoutes = require('./routes/experiencia.js');
+const proyectosRoutes = require('./routes/proyectos.js');
+const presentacionesRoutes = require('./routes/presentaciones.js');
 
 const app = express();
 const PORT = process.env.DB_PORT || 41104;
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
-app.use('/usuarios', usuarioRoutes);
-
-app.use('/uploads', express.static('uploads')); 
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/proyectos', proyectosRoutes);
-app.use('/api/presentacion', presentacionesRoutes);
-
-module.exports = app;
-
-
+// Rutas API
+app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/educacion', educacionRoutes);
 app.use('/api/experiencia', experienciaRoutes);
-
+app.use('/api/proyectos', proyectosRoutes);
+app.use('/api/presentacion', presentacionesRoutes);
 
 app.listen(PORT, async () => {
   try {
