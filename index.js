@@ -12,8 +12,7 @@ const proyectosRoutes = require('./app/routes/proyectos.js');
 const presentacionesRoutes = require('./app/routes/presentaciones.js');
 
 const app = express();
-const DB_PORT = process.env.DB_PORT || 41104;
-const DB_HOST = process.env.DB_HOST; // importante para Railway
+const PORT = process.env.PORT || 41104;
 
 app.use(cors());
 app.use(express.json());
@@ -26,11 +25,11 @@ app.use('/api/experiencia', experienciaRoutes);
 app.use('/api/proyectos', proyectosRoutes);
 app.use('/api/presentacion', presentacionesRoutes);
 
-app.listen(DB_PORT, DB_HOST, async () => {
+app.listen(PORT, async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
-    console.log(`Servidor corriendo en http://${DB_HOST}:${DB_PORT}`);
+    await sequelize.sync(); // sincroniza modelos con la base
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
   } catch (error) {
     console.error('Error conectando a la base:', error);
   }
