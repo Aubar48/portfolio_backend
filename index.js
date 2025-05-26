@@ -3,16 +3,16 @@ dotenv.config();
 
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/database');
+const sequelize = require('./app/config/database');
 
-const usuarioRoutes = require('./routes/usuario.js');
-const educacionRoutes = require('./routes/educacion.js');
-const experienciaRoutes = require('./routes/experiencia.js');
-const proyectosRoutes = require('./routes/proyectos.js');
-const presentacionesRoutes = require('./routes/presentaciones.js');
+const usuarioRoutes = require('./app/routes/usuario.js');
+const educacionRoutes = require('./app/routes/educacion.js');
+const experienciaRoutes = require('./app/routes/experiencia.js');
+const proyectosRoutes = require('./app/routes/proyectos.js');
+const presentacionesRoutes = require('./app/routes/presentaciones.js');
 
 const app = express();
-const PORT = process.env.DB_PORT || 41104;
+const PORT = process.env.PORT || 41104;
 
 app.use(cors());
 app.use(express.json());
