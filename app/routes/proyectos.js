@@ -1,19 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
 const Proyecto = require('../models/Proyecto.js');
-
-// Configuración de multer para subir imágenes
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/proyectos/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const upload = multer({ storage });
 
 // Obtener todos los proyectos
 router.get('/', async (req, res) => {
@@ -26,54 +13,47 @@ router.get('/', async (req, res) => {
 });
 
 // Crear nuevo proyecto
-router.post('/', upload.single('foto'), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { titulo, descripcion, linkGithub, linkDemo, UsuarioId } = req.body;
+    const { titulo, descripcion, linkGithub, linkDeploy, UsuarioId, foto } = req.body;
 
-    const nuevoProyecto = await Proyecto.create({
+    const nuevo = await Proyecto.create({
       titulo,
       descripcion,
       linkGithub,
-      linkDemo,
+      linkDeploy,
       UsuarioId,
-      foto: req.file ? req.file.filename : null
+      foto
     });
 
-    res.status(201).json(nuevoProyecto);
+    res.status(201).json(nuevo);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// Eliminar un proyecto
-router.delete('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const eliminado = await Proyecto.destroy({ where: { id } });
-
-    if (!eliminado) return res.status(404).json({ error: 'Proyecto no encontrado' });
-
-    res.json({ message: 'Proyecto eliminado' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Actualizar un proyecto
-router.put('/:id', upload.single('foto'), async (req, res) => {
+// Actualizar proyecto
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
 
-    if (req.file) {
-      data.foto = req.file.filename;
-    }
-
-    const actualizado = await Proyecto.update(data, { where: { id } });
-
+    await Proyecto.update(data, { where: { id } });
     res.json({ message: 'Proyecto actualizado' });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+// Eliminar proyecto
+router.delete('/:id', async (req, res) => {
+  try {
+    const eliminado = await Proyecto.destroy({ where: { id: req.params.id } });
+    if (!eliminado) return res.status(404).json({ error: 'No encontrado' });
+
+    res.json({ message: 'Proyecto eliminado' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

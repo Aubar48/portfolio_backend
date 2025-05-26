@@ -1,13 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const Educacion = require('../models/Educacion.js');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/educacion/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
 
 // Obtener todas las educaciones
 router.get('/', async (req, res) => {
@@ -20,9 +13,9 @@ router.get('/', async (req, res) => {
 });
 
 // Crear nueva educación
-router.post('/', upload.single('foto'), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { titulo, institucion, fechaInicio, fechaFin, descripcion, UsuarioId } = req.body;
+    const { titulo, institucion, fechaInicio, fechaFin, descripcion, UsuarioId, foto } = req.body;
 
     const nueva = await Educacion.create({
       titulo,
@@ -31,7 +24,7 @@ router.post('/', upload.single('foto'), async (req, res) => {
       fechaFin,
       descripcion,
       UsuarioId,
-      foto: req.file ? req.file.filename : null
+      foto
     });
 
     res.status(201).json(nueva);
@@ -41,14 +34,10 @@ router.post('/', upload.single('foto'), async (req, res) => {
 });
 
 // Actualizar educación
-router.put('/:id', upload.single('foto'), async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
-
-    if (req.file) {
-      data.foto = req.file.filename;
-    }
 
     await Educacion.update(data, { where: { id } });
     res.json({ message: 'Educación actualizada' });
